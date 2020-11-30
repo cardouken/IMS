@@ -1,0 +1,30 @@
+plugins {
+    id 'org.springframework.boot' version '2.4.0'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'java'
+}
+
+group = 'ee.uustal'
+version = '1.0.0'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+
+    runtimeOnly 'org.hsqldb:hsqldb'
+
+//    compile group: 'org.junit', name: 'junit5-engine', version: '5.0.0-ALPHA'
+    testCompile group: 'junit', name: 'junit', version: '4.2'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+    useJUnitPlatform()
+}
