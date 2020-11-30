@@ -2,7 +2,7 @@ package ee.uustal.ims.service;
 
 import ee.uustal.ims.repository.TransactionRepository;
 import ee.uustal.ims.entity.Player;
-import ee.uustal.ims.entity.Transaction;
+import ee.uustal.ims.entity.Transactions;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,28 +19,22 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Transaction findById(String id) {
-        return transactionRepository.findById(id);
+    public List<Transactions> findAllUntilId(Player player, Integer id) {
+        return transactionRepository.findAllUntilId(player.getId(), id);
     }
 
     @Override
-    public List<Transaction> findAllUntilId(Player player, String id) {
-        throw new RuntimeException("Not implemented");
-    }
-
-    @Override
-    public Transaction add(Player player, String txId, BigDecimal balanceChange) {
-        final Transaction transaction = new Transaction()
+    public Transactions add(Player player, Integer txId, BigDecimal balanceChange) {
+        final Transactions transaction = new Transactions()
                 .setId(txId)
                 .setPlayerId(player.getId())
                 .setTimestamp(LocalDateTime.now())
                 .setBalanceChange(balanceChange);
-        transactionRepository.add(transaction);
-        return transaction;
+        return transactionRepository.save(transaction);
     }
 
     @Override
-    public List<Transaction> findAllByPlayer(String playerId) {
-        return transactionRepository.findAllByPlayer(playerId);
+    public List<Transactions> findAllByPlayer(Integer playerId) {
+        return transactionRepository.findAllById(playerId);
     }
 }

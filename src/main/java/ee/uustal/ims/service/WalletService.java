@@ -9,21 +9,21 @@ public interface WalletService {
      * @param txId          transaction identifier
      * @param balanceChange balance change
      */
-    BalanceChangeResult updateBalance(String username, String txId, BigDecimal balanceChange);
+    BalanceChangeResult updateBalance(String username, Integer txId, BigDecimal balanceChange);
 
     class BalanceChangeResult {
 
-        private String txId;
+        private Integer txId;
         private BigDecimal balance;
         private BigDecimal balanceChange;
         private long balanceVersion;
         private Integer errorCode;
 
-        public String getTxId() {
+        public Integer getTxId() {
             return txId;
         }
 
-        public BalanceChangeResult setTxId(String txId) {
+        public BalanceChangeResult setTxId(Integer txId) {
             this.txId = txId;
             return this;
         }

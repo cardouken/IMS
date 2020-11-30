@@ -5,7 +5,7 @@ public class ApplicationLogicException extends RuntimeException {
     public enum ErrorCode {
 
         BALANCE_LESS_THAN_ZERO,
-        BALANCE_GREATER_THAN_MAX_LIMIT,
+        BALANCE_CHANGE_EXCEEDS_MAX_LIMIT,
         PLAYER_BLACKLISTED;
 
         public String toLocalizationKey() {

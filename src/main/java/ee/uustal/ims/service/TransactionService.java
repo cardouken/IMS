@@ -1,19 +1,17 @@
 package ee.uustal.ims.service;
 
 import ee.uustal.ims.entity.Player;
-import ee.uustal.ims.entity.Transaction;
+import ee.uustal.ims.entity.Transactions;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public interface TransactionService {
 
-    Transaction findById(String id);
+    List<Transactions> findAllUntilId(Player player, Integer id);
 
-    List<Transaction> findAllUntilId(Player player, String id);
+    Transactions add(Player player, Integer txId, BigDecimal balanceChange);
 
-    Transaction add(Player player, String txId, BigDecimal balanceChange);
-
-    List<Transaction> findAllByPlayer(String playerId);
+    List<Transactions> findAllByPlayer(Integer playerId);
 
 }

@@ -10,8 +10,8 @@ import java.math.BigDecimal;
 public class Player {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.TABLE)
+    private Integer id;
 
     private String username;
 
@@ -19,11 +19,11 @@ public class Player {
 
     private BigDecimal balance;
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public Player setId(String id) {
+    public Player setId(Integer id) {
         this.id = id;
         return this;
     }
@@ -60,6 +60,5 @@ public class Player {
         this.balanceVersion++;
         return previousVersion;
     }
-
 
 }
