@@ -11,6 +11,8 @@ public interface WalletService {
      */
     BalanceChangeResult updateBalance(String username, Integer txId, BigDecimal balanceChange);
 
+    void cleanUp();
+
     class BalanceChangeResult {
 
         private Integer txId;

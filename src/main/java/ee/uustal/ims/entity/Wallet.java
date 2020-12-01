@@ -11,7 +11,7 @@ public class Wallet {
     private BigDecimal balance;
     private long version;
 
-    public Wallet(Player player, List<Transactions> transactions) {
+    public Wallet(Player player, List<TransactionEntity> transactions) {
         this.player = player;
         this.balance = player.getBalance();
         this.version = player.getBalanceVersion();
@@ -19,19 +19,19 @@ public class Wallet {
     }
 
 
-    private synchronized void apply(List<Transactions> transactions) {
-        for (Transactions transaction : transactions) {
+    private synchronized void apply(List<TransactionEntity> transactions) {
+        for (TransactionEntity transaction : transactions) {
             apply(transaction);
         }
     }
 
-    public synchronized boolean apply(Transactions transaction) {
+    public synchronized boolean apply(TransactionEntity transaction) {
         if (this.balance.add(transaction.getBalanceChange()).signum() == -1) {
             throw new ApplicationLogicException(ApplicationLogicException.ErrorCode.BALANCE_LESS_THAN_ZERO);
         }
         this.balance = balance.add(transaction.getBalanceChange());
         this.version++;
-        return false;
+        return true;
     }
 
     public BigDecimal getBalance() {

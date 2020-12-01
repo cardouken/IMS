@@ -6,4 +6,6 @@ public interface PlayerService {
 
     Player getOrCreatePlayer(String username);
 
+    void cleanUp();
+
 }

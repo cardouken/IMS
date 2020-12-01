@@ -33,7 +33,7 @@ public class BalanceUpdateTest extends BaseTest {
     }
 
     @Test
-    public void increase_balance_over_predefined_limit() {
+    public void try_increasing_balance_over_max_limit() {
         // given
         final Player player = createPlayer().build();
 
@@ -46,7 +46,7 @@ public class BalanceUpdateTest extends BaseTest {
     }
 
     @Test
-    public void balance_negative_after_change() {
+    public void try_setting_balance_to_negative() {
         // given
         final Player player = createPlayer().build();
 
@@ -59,15 +59,37 @@ public class BalanceUpdateTest extends BaseTest {
     }
 
     @Test
-    public void balance_change_already_exists() {
+    public void transaction_already_exists() {
         // given
         final Player player = createPlayer().build();
-        final int txId = 69420;
-        updateBalance(player).withTransactionId(txId).updateBy(69).build();
+        final int txId = 42069;
+        final WalletService.BalanceChangeResult firstUpdate = updateBalance(player).withTransactionId(txId).updateBy(69).build();
 
         // when
         updateBalance(player).withTransactionId(txId).updateBy(420).build();
 
         // then
+        Assert.assertEquals(BigDecimal.valueOf(69), firstUpdate.getBalanceChange());
+        Assert.assertEquals(BigDecimal.valueOf(69), firstUpdate.getBalance());
+        Assert.assertEquals(txId, firstUpdate.getTxId());
+        Assert.assertEquals(2L, firstUpdate.getBalanceVersion());
+    }
+
+    @Test
+    public void only_check_for_last_1000_transactions() {
+        // given
+        final Player player = createPlayer().build();
+        for (int i = 1; i <= 1500; i++) {
+            updateBalance(player).withTransactionId(i).updateBy(5).build();
+        }
+
+        // when
+        final WalletService.BalanceChangeResult result = updateBalance(player).withTransactionId(400).updateBy(100).build();
+
+        // then
+        Assert.assertEquals(BigDecimal.valueOf(100), result.getBalanceChange());
+        Assert.assertEquals(BigDecimal.valueOf(7600), result.getBalance());
+        Assert.assertEquals(400, result.getTxId());
+//        Assert.assertEquals(2L, result.getBalanceVersion());
     }
 }

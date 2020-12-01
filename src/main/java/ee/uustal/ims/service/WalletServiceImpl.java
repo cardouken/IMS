@@ -1,7 +1,7 @@
 package ee.uustal.ims.service;
 
 import ee.uustal.ims.entity.Player;
-import ee.uustal.ims.entity.Transactions;
+import ee.uustal.ims.entity.TransactionEntity;
 import ee.uustal.ims.entity.Wallet;
 import ee.uustal.ims.exception.ApplicationLogicException;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,13 +31,13 @@ public class WalletServiceImpl implements WalletService {
         }
 
         final Player player = playerService.getOrCreatePlayer(username);
-        Transactions transaction = transactionService.add(player, txId, balanceChange);
+        TransactionEntity transaction = transactionService.add(player, txId, balanceChange);
         Wallet wallet = createWallet(player, txId);
 
         if (wallet != null) {
             return new BalanceChangeResult()
                     .setTxId(txId)
-                    .setBalanceChange(balanceChange)
+                    .setBalanceChange(transaction.getBalanceChange())
                     .setBalanceVersion(wallet.getVersion())
                     .setBalance(wallet.getBalance());
         }
@@ -54,20 +54,22 @@ public class WalletServiceImpl implements WalletService {
                 .setBalance(wallet.getBalance());
     }
 
+    @Override
+    public void cleanUp() {
+        transactionService.cleanUp();
+    }
+
     private Wallet createWallet(Player player) {
-        List<Transactions> transactions = transactionService.findAllByPlayer(player.getId());
-        //        wallet.apply(transactions);
+        List<TransactionEntity> transactions = transactionService.findAllByPlayer(player.getId());
         return new Wallet(player, transactions);
     }
 
     private Wallet createWallet(Player player, Integer txId) {
-        List<Transactions> existingTransactions = transactionService.findAllUntilId(player, txId);
+        List<TransactionEntity> existingTransactions = transactionService.findAllUntilId(player, txId);
         if (existingTransactions.size() == 0) {
             return null;
         }
         return new Wallet(player, existingTransactions);
-//        wallet.apply(existingTransactions);
-//        return wallet;
     }
 
 //    private void initBalance(String txId, BigDecimal balanceChange) {

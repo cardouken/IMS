@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-public class Transactions {
+public class TransactionEntity {
 
     @Id
     private Integer id;
@@ -23,7 +23,7 @@ public class Transactions {
         return id;
     }
 
-    public Transactions setId(Integer id) {
+    public TransactionEntity setId(Integer id) {
         this.id = id;
         return this;
     }
@@ -32,7 +32,7 @@ public class Transactions {
         return playerId;
     }
 
-    public Transactions setPlayerId(Integer playerId) {
+    public TransactionEntity setPlayerId(Integer playerId) {
         this.playerId = playerId;
         return this;
     }
@@ -41,7 +41,7 @@ public class Transactions {
         return balanceChange;
     }
 
-    public Transactions setBalanceChange(BigDecimal balanceChange) {
+    public TransactionEntity setBalanceChange(BigDecimal balanceChange) {
         this.balanceChange = balanceChange;
         return this;
     }
@@ -50,7 +50,7 @@ public class Transactions {
         return timestamp;
     }
 
-    public Transactions setTimestamp(LocalDateTime timestamp) {
+    public TransactionEntity setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
         return this;
     }
@@ -59,7 +59,7 @@ public class Transactions {
         return balanceVersion;
     }
 
-    public Transactions setBalanceVersion(long balanceVersion) {
+    public TransactionEntity setBalanceVersion(long balanceVersion) {
         this.balanceVersion = balanceVersion;
         return this;
     }

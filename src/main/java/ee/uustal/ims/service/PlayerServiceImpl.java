@@ -27,4 +27,9 @@ public class PlayerServiceImpl implements PlayerService {
                         )
                 );
     }
+
+    @Override
+    public void cleanUp() {
+        playerRepository.deleteAll();
+    }
 }
