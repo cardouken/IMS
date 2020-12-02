@@ -26,7 +26,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public BalanceChangeResult updateBalance(String username, Integer txId, BigDecimal balanceChange) {
+    public BalanceChangeResult updateBalance(String username, Integer transactionId, BigDecimal balanceChange) {
         if (balanceChange.longValue() >= MAX_BALANCE_INCREASE) {
             throw new ApplicationLogicException(ApplicationLogicException.ErrorCode.BALANCE_CHANGE_EXCEEDS_MAX_LIMIT);
         }
@@ -34,21 +34,22 @@ public class WalletServiceImpl implements WalletService {
         final Player player = playerService.getOrCreatePlayer(username);
 
         synchronized (player) {
-            final Wallet wallet = createWallet(player, txId);
+            final Wallet wallet = createWallet(player, transactionId);
             final Transaction transaction = new Transaction()
-                    .setId(txId)
+                    .setId(transactionId)
                     .setPlayerId(player.getId())
                     .setTimestamp(LocalDateTime.now())
                     .setBalanceChange(balanceChange);
             wallet.apply(transaction);
-            if (wallet.getBalance().signum() == -1) {
+
+            if (wallet.balanceNegative()) {
                 throw new ApplicationLogicException(ApplicationLogicException.ErrorCode.BALANCE_LESS_THAN_ZERO);
             }
             transactionService.add(transaction);
             player.setBalance(wallet.getBalance());
             player.setBalanceVersion(wallet.getVersion());
             return new BalanceChangeResult()
-                    .setTxId(txId)
+                    .setTransactionId(transactionId)
                     .setBalanceChange(balanceChange)
                     .setBalanceVersion(wallet.getVersion())
                     .setBalance(wallet.getBalance());
@@ -60,8 +61,8 @@ public class WalletServiceImpl implements WalletService {
         transactionService.cleanUp();
     }
 
-    private Wallet createWallet(Player player, Integer txId) {
-        List<Transaction> existingTransactions = transactionService.findAllUntilId(player, player.getBalanceVersion(), txId);
+    private Wallet createWallet(Player player, Integer transactionId) {
+        List<Transaction> existingTransactions = transactionService.findAllUntilId(player, player.getBalanceVersion(), transactionId);
         if (existingTransactions.size() == 0) {
             List<Transaction> transactions = transactionService.findAllByPlayer(player.getId(), player.getBalanceVersion());
             return new Wallet(player, transactions);

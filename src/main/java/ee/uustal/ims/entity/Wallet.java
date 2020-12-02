@@ -16,7 +16,6 @@ public class Wallet {
         apply(transactions);
     }
 
-
     private synchronized void apply(List<Transaction> transactions) {
         for (Transaction transaction : transactions) {
             apply(transaction);
@@ -24,7 +23,7 @@ public class Wallet {
     }
 
     public synchronized void apply(Transaction transaction) {
-        if (this.balance.add(transaction.getBalanceChange()).signum() == -1) {
+        if (resultingBalanceNegative(transaction.getBalanceChange())) {
             throw new ApplicationLogicException(ApplicationLogicException.ErrorCode.BALANCE_LESS_THAN_ZERO);
         }
         this.balance = balance.add(transaction.getBalanceChange());
@@ -37,5 +36,13 @@ public class Wallet {
 
     public long getVersion() {
         return version;
+    }
+
+    private boolean resultingBalanceNegative(BigDecimal balanceChange) {
+        return this.balance.add(balanceChange).signum() == -1;
+    }
+
+    public boolean balanceNegative() {
+        return this.balance.signum() == -1;
     }
 }

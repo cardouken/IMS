@@ -5,6 +5,7 @@ import ee.uustal.ims.repository.PlayerRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -24,17 +25,22 @@ public class PlayerServiceImpl implements PlayerService {
         if (player == null) {
             player = playerRepository.findByUserName(username)
                     .orElseGet(
-                            () ->
-                                    playerRepository.save(
-                                            new Player()
-                                                    .setUsername(username)
-                                                    .setBalance(BigDecimal.ZERO)
-                                                    .setBalanceVersion(1L)
-                                    )
+                            () -> playerRepository.save(
+                                    new Player()
+                                            .setUsername(username)
+                                            .setBalance(BigDecimal.ZERO)
+                                            .setBalanceVersion(1L)
+                            )
                     );
             storage.put(player.getUsername(), player);
         }
         return player;
+    }
+
+    @Override
+    public synchronized void updateAll() {
+        final Collection<Player> players = storage.values();
+        playerRepository.saveAll(players);
     }
 
     @Override

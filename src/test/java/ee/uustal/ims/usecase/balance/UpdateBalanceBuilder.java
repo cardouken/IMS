@@ -9,7 +9,7 @@ public class UpdateBalanceBuilder {
 
     private final WalletService walletService;
     private final String username;
-    private Integer transactionId = new Random().nextInt(6);
+    private Integer transactionId = new Random().nextInt(Integer.MAX_VALUE);
     private BigDecimal balanceChange;
 
     public UpdateBalanceBuilder(WalletService walletService, String username) {

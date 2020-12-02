@@ -25,10 +25,10 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<Transaction> findAllUntilId(Player player, long version, Integer txId) {
+    public List<Transaction> findAllUntilId(Player player, long version, Integer transactionId) {
         return storage.values().stream()
                 .filter(t -> Objects.equals(t.getPlayerId(), player.getId()))
-                .filter(t -> t.getId() <= txId)
+                .filter(t -> t.getId() <= transactionId)
                 .filter(t -> t.getBalanceVersion() > version)
                 .collect(Collectors.toList());
     }

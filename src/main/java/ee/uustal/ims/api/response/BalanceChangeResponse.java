@@ -4,18 +4,18 @@ import java.math.BigDecimal;
 
 public class BalanceChangeResponse {
 
-    private String txId;
+    private String transactionId;
     private int errorCode;
     private long balanceVersion;
     private BigDecimal balance;
     private BigDecimal balanceChange;
 
-    public String getTxId() {
-        return txId;
+    public String getTransactionId() {
+        return transactionId;
     }
 
-    public BalanceChangeResponse setTxId(String txId) {
-        this.txId = txId;
+    public BalanceChangeResponse setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
         return this;
     }
 

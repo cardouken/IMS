@@ -28,12 +28,12 @@ public class BalanceUpdateTest extends BaseTest {
         // then
         Assert.assertEquals(BigDecimal.valueOf(2000), result.getBalanceChange());
         Assert.assertEquals(BigDecimal.valueOf(2000), result.getBalance());
-        Assert.assertEquals(txId, result.getTxId());
+        Assert.assertEquals(txId, result.getTransactionId());
         Assert.assertEquals(2L, result.getBalanceVersion());
     }
 
     @Test
-    public void try_increasing_balance_over_max_limit() {
+    public void set_balance_over_max_limit() {
         // given
         final Player player = createPlayer().build();
 
@@ -46,7 +46,7 @@ public class BalanceUpdateTest extends BaseTest {
     }
 
     @Test
-    public void try_setting_balance_to_negative() {
+    public void set_balance_to_negative_amount() {
         // given
         final Player player = createPlayer().build();
 
@@ -59,7 +59,7 @@ public class BalanceUpdateTest extends BaseTest {
     }
 
     @Test
-    public void transaction_already_exists() {
+    public void duplicate_transaction() {
         // given
         final Player player = createPlayer().build();
         final int txId = 42069;
@@ -71,7 +71,7 @@ public class BalanceUpdateTest extends BaseTest {
         // then
         Assert.assertEquals(BigDecimal.valueOf(69), firstUpdate.getBalanceChange());
         Assert.assertEquals(BigDecimal.valueOf(69), firstUpdate.getBalance());
-        Assert.assertEquals(txId, firstUpdate.getTxId());
+        Assert.assertEquals(txId, firstUpdate.getTransactionId());
         Assert.assertEquals(2L, firstUpdate.getBalanceVersion());
     }
 
@@ -79,11 +79,11 @@ public class BalanceUpdateTest extends BaseTest {
     public void check_sum() {
         // given
         final Player player = createPlayer().build();
-        updateBalance(player).withTransactionId(1).updateBy(5).build();
-        updateBalance(player).withTransactionId(2).updateBy(5).build();
+        updateBalance(player).updateBy(5).build();
+        updateBalance(player).updateBy(5).build();
 
         // when
-        final WalletService.BalanceChangeResult result = updateBalance(player).withTransactionId(3).updateBy(5).build();
+        final WalletService.BalanceChangeResult result = updateBalance(player).updateBy(5).build();
 
         // then
         Assert.assertEquals(BigDecimal.valueOf(5), result.getBalanceChange());
@@ -94,17 +94,18 @@ public class BalanceUpdateTest extends BaseTest {
     public void only_check_for_last_1000_transactions() {
         // given
         final Player player = createPlayer().build();
-        for (int i = 1; i <= 1500; i++) {
-            updateBalance(player).withTransactionId(i).updateBy(5).build();
+        for (int i = 0; i < 1500; i++) {
+            updateBalance(player).withTransactionId(i).updateBy(1).build();
         }
 
         // when
-        final WalletService.BalanceChangeResult result = updateBalance(player).withTransactionId(400).updateBy(100).build();
+        int txId = 404;
+        final WalletService.BalanceChangeResult result = updateBalance(player).withTransactionId(txId).updateBy(100).build();
 
         // then
         Assert.assertEquals(BigDecimal.valueOf(100), result.getBalanceChange());
-        Assert.assertEquals(BigDecimal.valueOf(7600), result.getBalance());
-        Assert.assertEquals(400, result.getTxId());
-//        Assert.assertEquals(2L, result.getBalanceVersion());
+        Assert.assertEquals(BigDecimal.valueOf(1600), result.getBalance());
+        Assert.assertEquals(txId, result.getTransactionId());
+        Assert.assertEquals(1502L, result.getBalanceVersion());
     }
 }
