@@ -76,6 +76,21 @@ public class BalanceUpdateTest extends BaseTest {
     }
 
     @Test
+    public void check_sum() {
+        // given
+        final Player player = createPlayer().build();
+        updateBalance(player).withTransactionId(1).updateBy(5).build();
+        updateBalance(player).withTransactionId(2).updateBy(5).build();
+
+        // when
+        final WalletService.BalanceChangeResult result = updateBalance(player).withTransactionId(3).updateBy(5).build();
+
+        // then
+        Assert.assertEquals(BigDecimal.valueOf(5), result.getBalanceChange());
+        Assert.assertEquals(BigDecimal.valueOf(15), result.getBalance());
+    }
+
+    @Test
     public void only_check_for_last_1000_transactions() {
         // given
         final Player player = createPlayer().build();

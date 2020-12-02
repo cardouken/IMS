@@ -1,13 +1,14 @@
 package ee.uustal.ims.service;
 
 import ee.uustal.ims.entity.Player;
-import ee.uustal.ims.entity.TransactionEntity;
+import ee.uustal.ims.entity.Transaction;
 import ee.uustal.ims.entity.Wallet;
 import ee.uustal.ims.exception.ApplicationLogicException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -31,27 +32,27 @@ public class WalletServiceImpl implements WalletService {
         }
 
         final Player player = playerService.getOrCreatePlayer(username);
-        TransactionEntity transaction = transactionService.add(player, txId, balanceChange);
-        Wallet wallet = createWallet(player, txId);
 
-        if (wallet != null) {
+        synchronized (player) {
+            final Wallet wallet = createWallet(player, txId);
+            final Transaction transaction = new Transaction()
+                    .setId(txId)
+                    .setPlayerId(player.getId())
+                    .setTimestamp(LocalDateTime.now())
+                    .setBalanceChange(balanceChange);
+            wallet.apply(transaction);
+            if (wallet.getBalance().signum() == -1) {
+                throw new ApplicationLogicException(ApplicationLogicException.ErrorCode.BALANCE_LESS_THAN_ZERO);
+            }
+            transactionService.add(transaction);
+            player.setBalance(wallet.getBalance());
+            player.setBalanceVersion(wallet.getVersion());
             return new BalanceChangeResult()
                     .setTxId(txId)
-                    .setBalanceChange(transaction.getBalanceChange())
+                    .setBalanceChange(balanceChange)
                     .setBalanceVersion(wallet.getVersion())
                     .setBalance(wallet.getBalance());
         }
-
-        wallet = createWallet(player);
-        if (!wallet.apply(transaction)) {
-            throw new RuntimeException("wrong version");
-        }
-
-        return new BalanceChangeResult()
-                .setTxId(txId)
-                .setBalanceChange(balanceChange)
-                .setBalanceVersion(wallet.getVersion())
-                .setBalance(wallet.getBalance());
     }
 
     @Override
@@ -59,25 +60,14 @@ public class WalletServiceImpl implements WalletService {
         transactionService.cleanUp();
     }
 
-    private Wallet createWallet(Player player) {
-        List<TransactionEntity> transactions = transactionService.findAllByPlayer(player.getId());
-        return new Wallet(player, transactions);
-    }
-
     private Wallet createWallet(Player player, Integer txId) {
-        List<TransactionEntity> existingTransactions = transactionService.findAllUntilId(player, txId);
+        List<Transaction> existingTransactions = transactionService.findAllUntilId(player, player.getBalanceVersion(), txId);
         if (existingTransactions.size() == 0) {
-            return null;
+            List<Transaction> transactions = transactionService.findAllByPlayer(player.getId(), player.getBalanceVersion());
+            return new Wallet(player, transactions);
+        } else {
+            return new Wallet(player, existingTransactions);
         }
-        return new Wallet(player, existingTransactions);
     }
 
-//    private void initBalance(String txId, BigDecimal balanceChange) {
-//        transactionRepository.add(
-//                new Transaction()
-//                        .setId(txId)
-//                        .setBalanceChange(balanceChange)
-//                        .setTimestamp(LocalDateTime.now())
-//        );
-//    }
 }

@@ -54,11 +54,4 @@ public class Player {
         this.balance = balance;
         return this;
     }
-
-    public long incrementBalanceVersion() {
-        final long previousVersion = this.balanceVersion;
-        this.balanceVersion++;
-        return previousVersion;
-    }
-
 }

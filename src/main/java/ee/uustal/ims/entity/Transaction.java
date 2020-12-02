@@ -1,14 +1,10 @@
 package ee.uustal.ims.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Entity
-public class TransactionEntity {
+public class Transaction {
 
-    @Id
     private Integer id;
 
     private Integer playerId;
@@ -23,7 +19,7 @@ public class TransactionEntity {
         return id;
     }
 
-    public TransactionEntity setId(Integer id) {
+    public Transaction setId(Integer id) {
         this.id = id;
         return this;
     }
@@ -32,7 +28,7 @@ public class TransactionEntity {
         return playerId;
     }
 
-    public TransactionEntity setPlayerId(Integer playerId) {
+    public Transaction setPlayerId(Integer playerId) {
         this.playerId = playerId;
         return this;
     }
@@ -41,7 +37,7 @@ public class TransactionEntity {
         return balanceChange;
     }
 
-    public TransactionEntity setBalanceChange(BigDecimal balanceChange) {
+    public Transaction setBalanceChange(BigDecimal balanceChange) {
         this.balanceChange = balanceChange;
         return this;
     }
@@ -50,7 +46,7 @@ public class TransactionEntity {
         return timestamp;
     }
 
-    public TransactionEntity setTimestamp(LocalDateTime timestamp) {
+    public Transaction setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
         return this;
     }
@@ -59,7 +55,7 @@ public class TransactionEntity {
         return balanceVersion;
     }
 
-    public TransactionEntity setBalanceVersion(long balanceVersion) {
+    public Transaction setBalanceVersion(long balanceVersion) {
         this.balanceVersion = balanceVersion;
         return this;
     }
