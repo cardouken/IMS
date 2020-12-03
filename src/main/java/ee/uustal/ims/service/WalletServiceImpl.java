@@ -1,9 +1,10 @@
 package ee.uustal.ims.service;
 
-import ee.uustal.ims.entity.Player;
-import ee.uustal.ims.entity.Transaction;
-import ee.uustal.ims.entity.Wallet;
+import ee.uustal.ims.persistence.entity.Player;
+import ee.uustal.ims.persistence.entity.Transaction;
+import ee.uustal.ims.persistence.entity.Wallet;
 import ee.uustal.ims.exception.ApplicationLogicException;
+import ee.uustal.ims.persistence.repository.BlacklistRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +15,19 @@ import java.util.List;
 @Service
 public class WalletServiceImpl implements WalletService {
 
-    @Value("${ims.max-balance-increase}")
+    @Value("${ims.config.max-balance-increase}")
     private long MAX_BALANCE_INCREASE;
 
     private final PlayerService playerService;
     private final TransactionService transactionService;
+    private final BlacklistRepository blacklistRepository;
 
-    public WalletServiceImpl(PlayerService playerService, TransactionService transactionService) {
+    public WalletServiceImpl(PlayerService playerService,
+                             TransactionService transactionService,
+                             BlacklistRepository blacklistRepository) {
         this.playerService = playerService;
         this.transactionService = transactionService;
+        this.blacklistRepository = blacklistRepository;
     }
 
     @Override
@@ -32,6 +37,9 @@ public class WalletServiceImpl implements WalletService {
         }
 
         final Player player = playerService.getOrCreatePlayer(username);
+        if (blacklistRepository.findById(player.getId()) != null) {
+            throw new ApplicationLogicException(ApplicationLogicException.ErrorCode.PLAYER_BLACKLISTED);
+        }
 
         synchronized (player) {
             final Wallet wallet = createWallet(player, transactionId);

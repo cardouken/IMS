@@ -1,4 +1,4 @@
-package ee.uustal.ims.entity;
+package ee.uustal.ims.persistence.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

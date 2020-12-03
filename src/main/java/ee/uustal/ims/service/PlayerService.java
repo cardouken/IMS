@@ -1,6 +1,6 @@
 package ee.uustal.ims.service;
 
-import ee.uustal.ims.entity.Player;
+import ee.uustal.ims.persistence.entity.Player;
 
 public interface PlayerService {
 

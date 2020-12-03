@@ -1,10 +1,11 @@
 package ee.uustal.ims;
 
-import ee.uustal.ims.entity.Player;
+import ee.uustal.ims.persistence.entity.Player;
 import ee.uustal.ims.exception.ApplicationLogicException;
 import ee.uustal.ims.service.WalletService;
 import ee.uustal.ims.util.ExpectedException;
 import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -12,24 +13,24 @@ import java.math.BigDecimal;
 
 public class BalanceUpdateTest extends BaseTest {
 
-    @Value("${ims.max-balance-increase}")
+    @Value("${ims.config.max-balance-increase}")
     private long maxBalanceIncrease;
 
     @Test
     public void update_player_balance() {
         // given
         final Player player = createPlayer().setUsername("mr_user").build();
-        Assert.assertEquals(BigDecimal.ZERO, player.getBalance());
+        Assertions.assertEquals(BigDecimal.ZERO, player.getBalance());
 
         // when
         final int txId = 69420;
         final WalletService.BalanceChangeResult result = updateBalance(player).withTransactionId(txId).updateBy(2000).build();
 
         // then
-        Assert.assertEquals(BigDecimal.valueOf(2000), result.getBalanceChange());
-        Assert.assertEquals(BigDecimal.valueOf(2000), result.getBalance());
-        Assert.assertEquals(txId, result.getTransactionId());
-        Assert.assertEquals(2L, result.getBalanceVersion());
+        Assertions.assertEquals(BigDecimal.valueOf(2000), result.getBalanceChange());
+        Assertions.assertEquals(BigDecimal.valueOf(2000), result.getBalance());
+        Assertions.assertEquals(txId, result.getTransactionId());
+        Assertions.assertEquals(2L, result.getBalanceVersion());
     }
 
     @Test
@@ -69,10 +70,10 @@ public class BalanceUpdateTest extends BaseTest {
         updateBalance(player).withTransactionId(txId).updateBy(420).build();
 
         // then
-        Assert.assertEquals(BigDecimal.valueOf(69), firstUpdate.getBalanceChange());
-        Assert.assertEquals(BigDecimal.valueOf(69), firstUpdate.getBalance());
-        Assert.assertEquals(txId, firstUpdate.getTransactionId());
-        Assert.assertEquals(2L, firstUpdate.getBalanceVersion());
+        Assertions.assertEquals(BigDecimal.valueOf(69), firstUpdate.getBalanceChange());
+        Assertions.assertEquals(BigDecimal.valueOf(69), firstUpdate.getBalance());
+        Assertions.assertEquals(txId, firstUpdate.getTransactionId());
+        Assertions.assertEquals(2L, firstUpdate.getBalanceVersion());
     }
 
     @Test
@@ -86,8 +87,8 @@ public class BalanceUpdateTest extends BaseTest {
         final WalletService.BalanceChangeResult result = updateBalance(player).updateBy(5).build();
 
         // then
-        Assert.assertEquals(BigDecimal.valueOf(5), result.getBalanceChange());
-        Assert.assertEquals(BigDecimal.valueOf(15), result.getBalance());
+        Assertions.assertEquals(BigDecimal.valueOf(5), result.getBalanceChange());
+        Assertions.assertEquals(BigDecimal.valueOf(15), result.getBalance());
     }
 
     @Test
@@ -103,9 +104,23 @@ public class BalanceUpdateTest extends BaseTest {
         final WalletService.BalanceChangeResult result = updateBalance(player).withTransactionId(txId).updateBy(100).build();
 
         // then
-        Assert.assertEquals(BigDecimal.valueOf(100), result.getBalanceChange());
-        Assert.assertEquals(BigDecimal.valueOf(1600), result.getBalance());
-        Assert.assertEquals(txId, result.getTransactionId());
-        Assert.assertEquals(1502L, result.getBalanceVersion());
+        Assertions.assertEquals(BigDecimal.valueOf(100), result.getBalanceChange());
+        Assertions.assertEquals(BigDecimal.valueOf(1600), result.getBalance());
+        Assertions.assertEquals(txId, result.getTransactionId());
+        Assertions.assertEquals(1502L, result.getBalanceVersion());
+    }
+
+    @Test
+    public void try_changing_balance_for_blacklisted_player() {
+        // given
+        final Player player = createPlayer().build();
+        blacklist(player).build();
+
+        // when -> then
+        ExpectedException.expect(
+                () -> updateBalance(player).updateBy(404).build(),
+                ApplicationLogicException.class,
+                "error.player-blacklisted"
+        );
     }
 }

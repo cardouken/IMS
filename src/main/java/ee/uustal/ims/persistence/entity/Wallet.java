@@ -1,4 +1,4 @@
-package ee.uustal.ims.entity;
+package ee.uustal.ims.persistence.entity;
 
 import ee.uustal.ims.exception.ApplicationLogicException;
 

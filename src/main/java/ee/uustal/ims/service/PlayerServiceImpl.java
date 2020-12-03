@@ -1,7 +1,7 @@
 package ee.uustal.ims.service;
 
-import ee.uustal.ims.entity.Player;
-import ee.uustal.ims.repository.PlayerRepository;
+import ee.uustal.ims.persistence.repository.PlayerRepository;
+import ee.uustal.ims.persistence.entity.Player;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

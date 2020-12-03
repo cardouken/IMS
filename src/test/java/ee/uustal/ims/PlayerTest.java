@@ -1,12 +1,16 @@
 package ee.uustal.ims;
 
-import ee.uustal.ims.entity.Player;
-import ee.uustal.ims.repository.PlayerRepository;
-import org.junit.Assert;
+import ee.uustal.ims.persistence.entity.Blacklist;
+import ee.uustal.ims.persistence.entity.Player;
+import ee.uustal.ims.persistence.repository.PlayerRepository;
+import ee.uustal.ims.util.ExpectedException;
+import io.jsondb.InvalidJsonDbApiUsageException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 public class PlayerTest extends BaseTest {
@@ -28,9 +32,66 @@ public class PlayerTest extends BaseTest {
 
         // then
         final Optional<Player> playerFromDb = playerRepository.findByUserName(player.getUsername());
-        Assert.assertTrue(playerFromDb.isPresent());
-        Assert.assertEquals(username, playerFromDb.get().getUsername());
-        Assert.assertEquals(BigDecimal.valueOf(500), playerFromDb.get().getBalance());
-        Assert.assertEquals(101L, playerFromDb.get().getBalanceVersion());
+        Assertions.assertTrue(playerFromDb.isPresent());
+        Assertions.assertEquals(username, playerFromDb.get().getUsername());
+        Assertions.assertEquals(BigDecimal.valueOf(500), playerFromDb.get().getBalance());
+        Assertions.assertEquals(101L, playerFromDb.get().getBalanceVersion());
+    }
+
+    @Test
+    public void add_player_to_blacklist() {
+        // given
+        final Player player = createPlayer().build();
+
+        // when
+        blacklist(player).build();
+
+        // then
+        final Blacklist blacklist = blacklistRepository.findById(player.getId());
+        Assertions.assertEquals(player.getId(), blacklist.getId());
+        Assertions.assertEquals(player.getUsername(), blacklist.getUsername());
+    }
+
+    @Test
+    public void remove_player_from_blacklist() {
+        // given
+        final Player player = createPlayer().build();
+
+        // when
+        blacklist(player).build();
+        unBlacklist(player).build();
+
+        // then
+        Assertions.assertNull(blacklistRepository.findById(player.getId()));
+    }
+
+
+    @Test
+    public void try_blacklisting_player_multiple_times() {
+        // given
+        final Player player = createPlayer().build();
+        blacklist(player).build();
+
+        // when
+        blacklist(player).build();
+
+        // then
+        final List<Blacklist> allBlacklistedPlayers = blacklistRepository.findAll();
+        Assertions.assertEquals(1, allBlacklistedPlayers.size());
+        Assertions.assertEquals(player.getId(), allBlacklistedPlayers.get(0).getId());
+        Assertions.assertEquals(player.getUsername(), allBlacklistedPlayers.get(0).getUsername());
+    }
+
+    @Test
+    public void try_unblacklisting_non_blacklisted_player() {
+        // given
+        final Player player = createPlayer().build();
+
+        // when -> then
+        ExpectedException.expect(
+                () -> unBlacklist(player).build(),
+                InvalidJsonDbApiUsageException.class
+
+        );
     }
 }

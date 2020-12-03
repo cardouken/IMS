@@ -7,6 +7,10 @@ public final class ExpectedException {
     private ExpectedException() {
     }
 
+    public static void expect(Runnable fn, Class<? extends Exception> exceptionClass) {
+        expect(fn, exceptionClass, null);
+    }
+
     public static void expect(Runnable fn, Class<? extends Exception> exceptionClass, String exceptionMessage) {
         try {
             fn.run();

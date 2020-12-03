@@ -14,7 +14,7 @@ public class PeriodicScheduler {
         this.playerService = playerService;
     }
 
-    @Scheduled(fixedDelayString = "${ims.schedule.delay.memory-flush-interval}")
+    @Scheduled(fixedDelayString = "${ims.config.memory-flush-interval}")
     public void flushMemoryToDatabase() {
         playerService.updateAll();
     }

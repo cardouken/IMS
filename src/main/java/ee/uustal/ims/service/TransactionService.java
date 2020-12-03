@@ -1,7 +1,7 @@
 package ee.uustal.ims.service;
 
-import ee.uustal.ims.entity.Player;
-import ee.uustal.ims.entity.Transaction;
+import ee.uustal.ims.persistence.entity.Player;
+import ee.uustal.ims.persistence.entity.Transaction;
 
 import java.util.List;
 
