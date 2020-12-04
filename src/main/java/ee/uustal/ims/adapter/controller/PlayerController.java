@@ -6,7 +6,9 @@ import ee.uustal.ims.adapter.api.request.PlayerUnblacklistRequest;
 import ee.uustal.ims.adapter.api.resource.PlayerResource;
 import ee.uustal.ims.adapter.web.CreatePlayerWebAdapter;
 import ee.uustal.ims.service.PlayerService;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,12 +30,12 @@ public class PlayerController {
         return createPlayerWebAdapter.getOrCreate(request);
     }
 
-    @PostMapping(value = "/player/blacklist")
+    @PutMapping(value = "/player/blacklist")
     public void blacklist(@Valid @RequestBody PlayerBlacklistRequest request) {
         playerService.blacklist(request.getUsername());
     }
 
-    @PostMapping(value = "/player/unblacklist")
+    @DeleteMapping(value = "/player/unblacklist")
     public void blacklist(@Valid @RequestBody PlayerUnblacklistRequest request) {
         playerService.unblacklist(request.getUsername());
     }

@@ -5,6 +5,7 @@ import ee.uustal.ims.persistence.entity.Transaction;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,12 +22,12 @@ public class TransactionServiceImpl implements TransactionService {
     private final Map<Long, Transaction> storage;
 
     public TransactionServiceImpl() {
-        this.storage = new LinkedHashMap<>() {
+        this.storage = Collections.synchronizedMap(new LinkedHashMap<>() {
             @Override
             protected boolean removeEldestEntry(Map.Entry<Long, Transaction> eldest) {
                 return size() > maxAmountOfLatestTransactions;
             }
-        };
+        });
     }
 
     @Override

@@ -13,18 +13,18 @@ public class AuditService {
 
     private final Logger logger = LogManager.getLogger(getClass());
 
-    public void log(Transaction transaction, Player player) {
+    public void logTransactionIn(Transaction transaction, Player player) {
         logger.info(
                 MessageFormat.format(
                         "IN: transaction with ID: {0} by player: username: {1}, balance change: {2}",
                         transaction.getId(),
                         player.getUsername(),
-                        String.valueOf(transaction.getBalanceChange()) // todo
+                        String.valueOf(transaction.getBalanceChange())
                 )
         );
     }
 
-    public void logTransaction(Transaction transaction, Player player) {
+    public void logTransactionOut(Transaction transaction, Player player) {
         logger.info(
                 MessageFormat.format(
                         "OUT: transaction ID: {0}, balance version: {1}, balance change: {2}, player balance after change: {3}",

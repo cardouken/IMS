@@ -47,10 +47,7 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public void updateAll() {
         final Collection<Player> players = storage.values();
-        for (Player player : players) {
-            playerRepository.save(player);
-        }
-//        playerRepository.saveAll(players);
+        playerRepository.saveAll(players);
         logger.info(MessageFormat.format("Flushed memcache to database for a total of {0} player records", players.size()));
     }
 

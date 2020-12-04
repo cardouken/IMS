@@ -18,30 +18,30 @@ import java.util.Optional;
 @Service
 public class WalletServiceImpl implements WalletService {
 
-    @Value("${ims.config.max-balance-increase}")
-    private long MAX_BALANCE_INCREASE;
-
     private final PlayerService playerService;
     private final TransactionService transactionService;
     private final BlacklistRepository blacklistRepository;
     private final LockService lockService;
     private final AuditService auditService;
+    private final long maxBalanceIncrease;
 
     public WalletServiceImpl(PlayerService playerService,
                              TransactionService transactionService,
                              BlacklistRepository blacklistRepository,
                              LockService lockService,
-                             AuditService auditService) {
+                             AuditService auditService,
+                             @Value("${ims.config.max-balance-increase}") long maxBalanceIncrease) {
         this.playerService = playerService;
         this.transactionService = transactionService;
         this.blacklistRepository = blacklistRepository;
         this.lockService = lockService;
         this.auditService = auditService;
+        this.maxBalanceIncrease = maxBalanceIncrease;
     }
 
     @Override
     public BalanceChangeResult updateBalance(String username, long transactionId, BigDecimal balanceChange) {
-        if (balanceChange.longValue() >= MAX_BALANCE_INCREASE) {
+        if (balanceChange.longValue() >= maxBalanceIncrease) {
             throw new ApplicationLogicException(ApplicationLogicException.ErrorCode.BALANCE_CHANGE_EXCEEDS_MAX_LIMIT);
         }
 
@@ -52,9 +52,7 @@ public class WalletServiceImpl implements WalletService {
 
         lockService.lock(player.getUsername());
         try {
-            Wallet wallet;
-            Optional<Transaction> existingTransactions = transactionService.findById(player, player.getBalanceVersion(), transactionId);
-
+            final Optional<Transaction> existingTransactions = transactionService.findById(player, player.getBalanceVersion(), transactionId);
             if (existingTransactions.isPresent()) {
                 final Transaction transaction = existingTransactions.stream()
                         .filter(t -> Objects.equals(transactionId, t.getId()))
@@ -67,8 +65,9 @@ public class WalletServiceImpl implements WalletService {
                         .setBalanceVersion(transaction.getBalanceVersion())
                         .setBalance(transaction.getBalance().add(transaction.getBalanceChange()));
             }
+
             List<Transaction> transactions = transactionService.findAllByPlayer(player.getUsername(), player.getBalanceVersion());
-            wallet = new Wallet(player, transactions);
+            Wallet wallet = new Wallet(player, transactions);
 
             final Transaction transaction = new Transaction()
                     .setId(transactionId)
@@ -78,12 +77,13 @@ public class WalletServiceImpl implements WalletService {
                     .setBalance(wallet.getBalance());
             wallet.apply(transaction);
 
-            auditService.log(transaction, player);
+            auditService.logTransactionIn(transaction, player);
+
             transactionService.add(transaction);
             player.setBalance(wallet.getBalance());
             player.setBalanceVersion(wallet.getVersion());
 
-            auditService.logTransaction(transaction, player);
+            auditService.logTransactionOut(transaction, player);
 
             return new BalanceChangeResult()
                     .setTransactionId(transactionId)

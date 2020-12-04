@@ -9,7 +9,7 @@ public class BalanceChangeRequest {
     private String username;
 
     @NotNull
-    private long transactionId;
+    private Long transactionId;
 
     @NotNull
     private BigDecimal balanceChange;
@@ -23,11 +23,11 @@ public class BalanceChangeRequest {
         return this;
     }
 
-    public long getTransactionId() {
+    public Long getTransactionId() {
         return transactionId;
     }
 
-    public BalanceChangeRequest setTransactionId(long transactionId) {
+    public BalanceChangeRequest setTransactionId(Long transactionId) {
         this.transactionId = transactionId;
         return this;
     }

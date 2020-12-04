@@ -6,15 +6,10 @@ import java.time.LocalDateTime;
 public class Transaction {
 
     private long id;
-
     private String playerUsername;
-
     private BigDecimal balanceChange;
-
     private LocalDateTime timestamp;
-
     private long balanceVersion;
-
     private BigDecimal balance;
 
     public long getId() {
@@ -73,11 +68,13 @@ public class Transaction {
 
     @Override
     public String toString() {
-        return "Transaction{" + "id=" + id +
-                ", playerId=" + playerUsername +
+        return "Transaction{" +
+                "id=" + id +
+                ", playerUsername='" + playerUsername + '\'' +
                 ", balanceChange=" + balanceChange +
                 ", timestamp=" + timestamp +
                 ", balanceVersion=" + balanceVersion +
+                ", balance=" + balance +
                 '}';
     }
 }
