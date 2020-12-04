@@ -31,7 +31,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Optional<Transaction> findById(Player player, long version, long transactionId) {
+    public Optional<Transaction> findById(Player player, long transactionId) {
         return storage.values().stream()
                 .filter(t -> Objects.equals(t.getPlayerUsername(), player.getUsername()))
                 .filter(t -> t.getId() == transactionId)

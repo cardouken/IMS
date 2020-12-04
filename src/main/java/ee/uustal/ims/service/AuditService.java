@@ -16,7 +16,7 @@ public class AuditService {
     public void logTransactionIn(Transaction transaction, Player player) {
         logger.info(
                 MessageFormat.format(
-                        "IN: transaction with ID: {0} by player: username: {1}, balance change: {2}",
+                        "IN: transaction ID: {0} by username: {1}, balance change: {2}",
                         transaction.getId(),
                         player.getUsername(),
                         String.valueOf(transaction.getBalanceChange())

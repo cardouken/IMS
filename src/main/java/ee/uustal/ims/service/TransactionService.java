@@ -10,7 +10,7 @@ public interface TransactionService {
 
     void add(Transaction transaction);
 
-    Optional<Transaction> findById(Player player, long version, long id);
+    Optional<Transaction> findById(Player player, long id);
 
     List<Transaction> findAllByPlayer(String username, long version);
 

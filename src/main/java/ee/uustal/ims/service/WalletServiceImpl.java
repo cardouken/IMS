@@ -52,7 +52,7 @@ public class WalletServiceImpl implements WalletService {
 
         lockService.lock(player.getUsername());
         try {
-            final Optional<Transaction> existingTransactions = transactionService.findById(player, player.getBalanceVersion(), transactionId);
+            final Optional<Transaction> existingTransactions = transactionService.findById(player, transactionId);
             if (existingTransactions.isPresent()) {
                 final Transaction transaction = existingTransactions.stream()
                         .filter(t -> Objects.equals(transactionId, t.getId()))
