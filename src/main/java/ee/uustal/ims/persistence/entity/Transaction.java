@@ -5,9 +5,9 @@ import java.time.LocalDateTime;
 
 public class Transaction {
 
-    private Integer id;
+    private long id;
 
-    private Integer playerId;
+    private String playerUsername;
 
     private BigDecimal balanceChange;
 
@@ -15,21 +15,23 @@ public class Transaction {
 
     private long balanceVersion;
 
-    public Integer getId() {
+    private BigDecimal balance;
+
+    public long getId() {
         return id;
     }
 
-    public Transaction setId(Integer id) {
+    public Transaction setId(long id) {
         this.id = id;
         return this;
     }
 
-    public Integer getPlayerId() {
-        return playerId;
+    public String getPlayerUsername() {
+        return playerUsername;
     }
 
-    public Transaction setPlayerId(Integer playerId) {
-        this.playerId = playerId;
+    public Transaction setPlayerUsername(String playerUsername) {
+        this.playerUsername = playerUsername;
         return this;
     }
 
@@ -60,10 +62,19 @@ public class Transaction {
         return this;
     }
 
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public Transaction setBalance(BigDecimal balance) {
+        this.balance = balance;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "Transaction{" + "id=" + id +
-                ", playerId=" + playerId +
+                ", playerId=" + playerUsername +
                 ", balanceChange=" + balanceChange +
                 ", timestamp=" + timestamp +
                 ", balanceVersion=" + balanceVersion +

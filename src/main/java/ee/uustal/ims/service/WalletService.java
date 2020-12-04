@@ -5,26 +5,24 @@ import java.math.BigDecimal;
 public interface WalletService {
 
     /**
-     * @param username username
+     * @param username      username
      * @param transactionId transaction identifier
      * @param balanceChange balance change
      */
-    BalanceChangeResult updateBalance(String username, Integer transactionId, BigDecimal balanceChange);
-
-    void cleanUp();
+    BalanceChangeResult updateBalance(String username, long transactionId, BigDecimal balanceChange);
 
     class BalanceChangeResult {
 
-        private Integer transactionId;
+        private long transactionId;
         private BigDecimal balance;
         private BigDecimal balanceChange;
         private long balanceVersion;
 
-        public Integer getTransactionId() {
+        public long getTransactionId() {
             return transactionId;
         }
 
-        public BalanceChangeResult setTransactionId(Integer transactionId) {
+        public BalanceChangeResult setTransactionId(long transactionId) {
             this.transactionId = transactionId;
             return this;
         }

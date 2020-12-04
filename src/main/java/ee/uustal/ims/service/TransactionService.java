@@ -4,14 +4,14 @@ import ee.uustal.ims.persistence.entity.Player;
 import ee.uustal.ims.persistence.entity.Transaction;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TransactionService {
 
     void add(Transaction transaction);
 
-    List<Transaction> findAllUntilId(Player player, long version, Integer id);
+    Optional<Transaction> findById(Player player, long version, long id);
 
-    List<Transaction> findAllByPlayer(Integer playerId, long version);
+    List<Transaction> findAllByPlayer(String username, long version);
 
-    void cleanUp();
 }

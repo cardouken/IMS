@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,22 +18,29 @@ public class TransactionServiceImpl implements TransactionService {
     @Value("${ims.config.max-amount-of-latest-transactions}")
     private int maxAmountOfLatestTransactions;
 
-    private final Map<Integer, Transaction> storage;
+    private final Map<Long, Transaction> storage;
 
     public TransactionServiceImpl() {
         this.storage = new LinkedHashMap<>() {
             @Override
-            protected boolean removeEldestEntry(Map.Entry<Integer, Transaction> eldest) {
+            protected boolean removeEldestEntry(Map.Entry<Long, Transaction> eldest) {
                 return size() > maxAmountOfLatestTransactions;
             }
         };
     }
 
     @Override
-    public List<Transaction> findAllUntilId(Player player, long version, Integer transactionId) {
+    public Optional<Transaction> findById(Player player, long version, long transactionId) {
         return storage.values().stream()
-                .filter(t -> Objects.equals(t.getPlayerId(), player.getId()))
-                .filter(t -> t.getId() <= transactionId)
+                .filter(t -> Objects.equals(t.getPlayerUsername(), player.getUsername()))
+                .filter(t -> t.getId() == transactionId)
+                .findFirst();
+    }
+
+    @Override
+    public List<Transaction> findAllByPlayer(String username, long version) {
+        return storage.values().stream()
+                .filter(t -> Objects.equals(t.getPlayerUsername(), username))
                 .filter(t -> t.getBalanceVersion() > version)
                 .collect(Collectors.toList());
     }
@@ -40,18 +48,5 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public void add(Transaction transaction) {
         storage.putIfAbsent(transaction.getId(), transaction);
-    }
-
-    @Override
-    public List<Transaction> findAllByPlayer(Integer playerId, long version) {
-        return storage.values().stream()
-                .filter(t -> Objects.equals(t.getPlayerId(), playerId))
-                .filter(t -> t.getBalanceVersion() > version)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public void cleanUp() {
-        storage.clear();
     }
 }

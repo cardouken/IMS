@@ -11,7 +11,7 @@ public class Player {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-    private Integer id;
+    private long id;
 
     private String username;
 
@@ -19,11 +19,15 @@ public class Player {
 
     private BigDecimal balance;
 
-    public Integer getId() {
+    public Player() {
+        this.balanceVersion = 1L;
+    }
+
+    public long getId() {
         return id;
     }
 
-    public Player setId(Integer id) {
+    public Player setId(long id) {
         this.id = id;
         return this;
     }

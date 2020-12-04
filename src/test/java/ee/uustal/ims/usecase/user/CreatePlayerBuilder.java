@@ -19,6 +19,6 @@ public class CreatePlayerBuilder {
     }
 
     public Player build() {
-        return playerService.getOrCreatePlayer(username);
+        return playerService.getOrCreate(username);
     }
 }

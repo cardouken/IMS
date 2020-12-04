@@ -63,16 +63,16 @@ public class BalanceUpdateTest extends BaseTest {
         // given
         final Player player = createPlayer().build();
         final int txId = 42069;
-        final WalletService.BalanceChangeResult firstUpdate = updateBalance(player).withTransactionId(txId).updateBy(69).build();
+        updateBalance(player).withTransactionId(txId).updateBy(69).build();
 
         // when
-        updateBalance(player).withTransactionId(txId).updateBy(420).build();
+        final WalletService.BalanceChangeResult secondUpdate = updateBalance(player).withTransactionId(txId).updateBy(420).build();
 
         // then
-        Assertions.assertEquals(BigDecimal.valueOf(69), firstUpdate.getBalanceChange());
-        Assertions.assertEquals(BigDecimal.valueOf(69), firstUpdate.getBalance());
-        Assertions.assertEquals(txId, firstUpdate.getTransactionId());
-        Assertions.assertEquals(2L, firstUpdate.getBalanceVersion());
+        Assertions.assertEquals(BigDecimal.valueOf(69), secondUpdate.getBalanceChange());
+        Assertions.assertEquals(BigDecimal.valueOf(69), secondUpdate.getBalance());
+        Assertions.assertEquals(txId, secondUpdate.getTransactionId());
+        Assertions.assertEquals(2L, secondUpdate.getBalanceVersion());
     }
 
     @Test

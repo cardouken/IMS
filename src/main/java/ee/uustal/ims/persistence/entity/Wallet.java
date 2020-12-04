@@ -32,6 +32,7 @@ public class Wallet {
         }
         this.balance = balance.add(transaction.getBalanceChange());
         this.version++;
+        transaction.setBalanceVersion(this.version);
         logger.info(transaction.toString());
     }
 
@@ -45,9 +46,5 @@ public class Wallet {
 
     private boolean resultingBalanceNegative(BigDecimal balanceChange) {
         return this.balance.add(balanceChange).signum() == -1;
-    }
-
-    public boolean balanceNegative() {
-        return this.balance.signum() == -1;
     }
 }

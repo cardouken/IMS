@@ -18,22 +18,13 @@ public class BlacklistRepository {
     }
 
     public void update(Player player) {
-        if (jsonDbTemplate.getCollection(Blacklist.class) == null) {
-            jsonDbTemplate.createCollection(Blacklist.class);
-        }
         jsonDbTemplate.upsert(
-                new Blacklist()
-                        .setId(player.getId())
-                        .setUsername(player.getUsername()),
-                "Blacklist"
+                new Blacklist().setUsername(player.getUsername())
         );
     }
 
-    public Blacklist findById(Integer playerId) {
-        if (jsonDbTemplate.getCollection(Blacklist.class) == null) {
-            jsonDbTemplate.createCollection(Blacklist.class);
-        }
-        return Optional.ofNullable(jsonDbTemplate.findById(playerId, Blacklist.class))
+    public Blacklist findByUsername(String username) {
+        return Optional.ofNullable(jsonDbTemplate.findById(username, Blacklist.class))
                 .orElse(null);
     }
 
@@ -41,13 +32,14 @@ public class BlacklistRepository {
         return jsonDbTemplate.findAll(Blacklist.class);
     }
 
-    public void remove(Player player) {
-        jsonDbTemplate.remove(findById(player.getId()), Blacklist.class);
+    public void remove(String username) {
+        jsonDbTemplate.remove(findByUsername(username), Blacklist.class);
     }
 
     public void cleanup() {
         if (jsonDbTemplate.getCollection(Blacklist.class) != null) {
-            jsonDbTemplate.dropCollection(Blacklist.class);
+            final String query = "/.[username]";
+            jsonDbTemplate.findAllAndRemove(query, Blacklist.class);
         }
     }
 }

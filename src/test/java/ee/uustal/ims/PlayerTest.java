@@ -47,8 +47,7 @@ public class PlayerTest extends BaseTest {
         blacklist(player).build();
 
         // then
-        final Blacklist blacklist = blacklistRepository.findById(player.getId());
-        Assertions.assertEquals(player.getId(), blacklist.getId());
+        final Blacklist blacklist = blacklistRepository.findByUsername(player.getUsername());
         Assertions.assertEquals(player.getUsername(), blacklist.getUsername());
     }
 
@@ -62,9 +61,8 @@ public class PlayerTest extends BaseTest {
         unBlacklist(player).build();
 
         // then
-        Assertions.assertNull(blacklistRepository.findById(player.getId()));
+        Assertions.assertNull(blacklistRepository.findByUsername(player.getUsername()));
     }
-
 
     @Test
     public void try_blacklisting_player_multiple_times() {
@@ -78,7 +76,6 @@ public class PlayerTest extends BaseTest {
         // then
         final List<Blacklist> allBlacklistedPlayers = blacklistRepository.findAll();
         Assertions.assertEquals(1, allBlacklistedPlayers.size());
-        Assertions.assertEquals(player.getId(), allBlacklistedPlayers.get(0).getId());
         Assertions.assertEquals(player.getUsername(), allBlacklistedPlayers.get(0).getUsername());
     }
 
@@ -91,7 +88,6 @@ public class PlayerTest extends BaseTest {
         ExpectedException.expect(
                 () -> unBlacklist(player).build(),
                 InvalidJsonDbApiUsageException.class
-
         );
     }
 }

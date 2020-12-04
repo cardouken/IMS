@@ -4,9 +4,12 @@ import ee.uustal.ims.persistence.entity.Player;
 
 public interface PlayerService {
 
-    Player getOrCreatePlayer(String username);
+    Player getOrCreate(String username);
 
     void updateAll();
 
-    void cleanUp();
+    void blacklist(String username);
+
+    void unblacklist(String username);
+
 }

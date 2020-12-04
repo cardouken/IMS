@@ -14,6 +14,6 @@ public class BlacklistRemovePlayerBuilder {
     }
 
     public void build() {
-        blacklistRepository.remove(player);
+        blacklistRepository.remove(player.getUsername());
     }
 }

@@ -2,6 +2,7 @@ package ee.uustal.ims;
 
 import ee.uustal.ims.persistence.entity.Player;
 import ee.uustal.ims.persistence.repository.BlacklistRepository;
+import ee.uustal.ims.persistence.repository.PlayerRepository;
 import ee.uustal.ims.service.PlayerService;
 import ee.uustal.ims.service.WalletService;
 import ee.uustal.ims.usecase.balance.UpdateBalanceBuilder;
@@ -11,11 +12,15 @@ import ee.uustal.ims.usecase.user.CreatePlayerBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
 @ContextConfiguration(classes = {ImsApplication.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles(BaseTest.TEST_PROFILE)
 public abstract class BaseTest {
+
+    static final String TEST_PROFILE = "test";
 
     @Autowired
     protected PlayerService playerService;
@@ -26,10 +31,11 @@ public abstract class BaseTest {
     @Autowired
     protected BlacklistRepository blacklistRepository;
 
+    @Autowired
+    protected PlayerRepository playerRepository;
+
     @BeforeEach
     void setUp() {
-        playerService.cleanUp();
-        walletService.cleanUp();
         blacklistRepository.cleanup();
     }
 
