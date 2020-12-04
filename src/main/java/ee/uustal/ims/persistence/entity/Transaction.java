@@ -59,4 +59,14 @@ public class Transaction {
         this.balanceVersion = balanceVersion;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "Transaction{" + "id=" + id +
+                ", playerId=" + playerId +
+                ", balanceChange=" + balanceChange +
+                ", timestamp=" + timestamp +
+                ", balanceVersion=" + balanceVersion +
+                '}';
+    }
 }

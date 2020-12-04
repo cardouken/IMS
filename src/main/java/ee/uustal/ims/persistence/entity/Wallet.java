@@ -1,12 +1,15 @@
 package ee.uustal.ims.persistence.entity;
 
 import ee.uustal.ims.exception.ApplicationLogicException;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public class Wallet {
 
+    private final Logger logger = LogManager.getLogger(getClass());
     private BigDecimal balance;
     private long version;
 
@@ -24,10 +27,12 @@ public class Wallet {
 
     public synchronized void apply(Transaction transaction) {
         if (resultingBalanceNegative(transaction.getBalanceChange())) {
+            logger.error(ApplicationLogicException.ErrorCode.BALANCE_LESS_THAN_ZERO.formatErrorCode() + " for transaction: " + transaction.toString());
             throw new ApplicationLogicException(ApplicationLogicException.ErrorCode.BALANCE_LESS_THAN_ZERO);
         }
         this.balance = balance.add(transaction.getBalanceChange());
         this.version++;
+        logger.info(transaction.toString());
     }
 
     public BigDecimal getBalance() {

@@ -2,6 +2,7 @@ package ee.uustal.ims.service;
 
 import ee.uustal.ims.persistence.entity.Player;
 import ee.uustal.ims.persistence.entity.Transaction;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -13,13 +14,16 @@ import java.util.stream.Collectors;
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
+    @Value("${ims.config.max-amount-of-latest-transactions}")
+    private int maxAmountOfLatestTransactions;
+
     private final Map<Integer, Transaction> storage;
 
     public TransactionServiceImpl() {
         this.storage = new LinkedHashMap<>() {
             @Override
             protected boolean removeEldestEntry(Map.Entry<Integer, Transaction> eldest) {
-                return size() > 1000;
+                return size() > maxAmountOfLatestTransactions;
             }
         };
     }

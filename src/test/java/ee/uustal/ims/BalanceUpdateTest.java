@@ -1,10 +1,9 @@
 package ee.uustal.ims;
 
-import ee.uustal.ims.persistence.entity.Player;
 import ee.uustal.ims.exception.ApplicationLogicException;
+import ee.uustal.ims.persistence.entity.Player;
 import ee.uustal.ims.service.WalletService;
 import ee.uustal.ims.util.ExpectedException;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;

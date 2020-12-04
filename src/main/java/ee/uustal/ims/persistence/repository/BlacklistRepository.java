@@ -5,8 +5,6 @@ import ee.uustal.ims.persistence.entity.Player;
 import io.jsondb.JsonDBTemplate;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityNotFoundException;
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
 
