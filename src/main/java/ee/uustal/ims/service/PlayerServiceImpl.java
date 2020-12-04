@@ -63,4 +63,8 @@ public class PlayerServiceImpl implements PlayerService {
         blacklistRepository.remove(player.getUsername());
     }
 
+    public void cleanup() {
+        storage.clear();
+    }
+
 }

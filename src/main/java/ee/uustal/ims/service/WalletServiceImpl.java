@@ -66,8 +66,8 @@ public class WalletServiceImpl implements WalletService {
                         .setBalance(transaction.getBalance().add(transaction.getBalanceChange()));
             }
 
-            List<Transaction> transactions = transactionService.findAllByPlayer(player.getUsername(), player.getBalanceVersion());
-            Wallet wallet = new Wallet(player, transactions);
+            final List<Transaction> transactions = transactionService.findAllByPlayer(player.getUsername(), player.getBalanceVersion());
+            final Wallet wallet = new Wallet(player, transactions);
 
             final Transaction transaction = new Transaction()
                     .setId(transactionId)

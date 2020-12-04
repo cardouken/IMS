@@ -37,6 +37,8 @@ public abstract class BaseTest {
     @BeforeEach
     void setUp() {
         blacklistRepository.cleanup();
+        playerService.cleanup();
+        playerRepository.deleteAll();
     }
 
     public CreatePlayerBuilder createPlayer() {

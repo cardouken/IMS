@@ -16,9 +16,9 @@ public class AuditService {
     public void logTransactionIn(Transaction transaction, Player player) {
         logger.info(
                 MessageFormat.format(
-                        "IN: transaction ID: {0} by username: {1}, balance change: {2}",
-                        transaction.getId(),
+                        "IN by player {0}: transactionId={1}, username={2}, balanceChange={3}",
                         player.getUsername(),
+                        String.valueOf(transaction.getId()),
                         String.valueOf(transaction.getBalanceChange())
                 )
         );
@@ -27,11 +27,12 @@ public class AuditService {
     public void logTransactionOut(Transaction transaction, Player player) {
         logger.info(
                 MessageFormat.format(
-                        "OUT: transaction ID: {0}, balance version: {1}, balance change: {2}, player balance after change: {3}",
-                        transaction.getId(),
-                        transaction.getBalanceVersion(),
+                        "OUT by player {0}: transactionId={1}, balanceVersion={2}, balanceChange={3}, resultingBalance={4}",
+                        player.getUsername(),
+                        String.valueOf(transaction.getId()),
+                        String.valueOf(transaction.getBalanceVersion()),
                         String.valueOf(transaction.getBalanceChange()),
-                        player.getBalance().toString()
+                        String.valueOf(player.getBalance())
                 )
         );
     }

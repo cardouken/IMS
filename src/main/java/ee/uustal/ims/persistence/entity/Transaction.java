@@ -70,7 +70,7 @@ public class Transaction {
     public String toString() {
         return "Transaction{" +
                 "id=" + id +
-                ", playerUsername='" + playerUsername + '\'' +
+                ", username='" + playerUsername + '\'' +
                 ", balanceChange=" + balanceChange +
                 ", timestamp=" + timestamp +
                 ", balanceVersion=" + balanceVersion +
