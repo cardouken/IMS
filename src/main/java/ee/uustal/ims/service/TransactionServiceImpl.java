@@ -1,40 +1,52 @@
 package ee.uustal.ims.service;
 
-import ee.uustal.ims.repository.TransactionRepository;
-import ee.uustal.ims.entity.Player;
-import ee.uustal.ims.entity.Transactions;
+import ee.uustal.ims.persistence.entity.Player;
+import ee.uustal.ims.persistence.entity.Transaction;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
-    private final TransactionRepository transactionRepository;
+    @Value("${ims.config.max-amount-of-latest-transactions}")
+    private int maxAmountOfLatestTransactions;
 
-    public TransactionServiceImpl(TransactionRepository transactionRepository) {
-        this.transactionRepository = transactionRepository;
+    private final Map<Long, Transaction> storage;
+
+    public TransactionServiceImpl() {
+        this.storage = new LinkedHashMap<>() {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<Long, Transaction> eldest) {
+                return size() > maxAmountOfLatestTransactions;
+            }
+        };
     }
 
     @Override
-    public List<Transactions> findAllUntilId(Player player, Integer id) {
-        return transactionRepository.findAllUntilId(player.getId(), id);
+    public Optional<Transaction> findById(Player player, long version, long transactionId) {
+        return storage.values().stream()
+                .filter(t -> Objects.equals(t.getPlayerUsername(), player.getUsername()))
+                .filter(t -> t.getId() == transactionId)
+                .findFirst();
     }
 
     @Override
-    public Transactions add(Player player, Integer txId, BigDecimal balanceChange) {
-        final Transactions transaction = new Transactions()
-                .setId(txId)
-                .setPlayerId(player.getId())
-                .setTimestamp(LocalDateTime.now())
-                .setBalanceChange(balanceChange);
-        return transactionRepository.save(transaction);
+    public List<Transaction> findAllByPlayer(String username, long version) {
+        return storage.values().stream()
+                .filter(t -> Objects.equals(t.getPlayerUsername(), username))
+                .filter(t -> t.getBalanceVersion() > version)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Transactions> findAllByPlayer(Integer playerId) {
-        return transactionRepository.findAllById(playerId);
+    public void add(Transaction transaction) {
+        storage.putIfAbsent(transaction.getId(), transaction);
     }
 }

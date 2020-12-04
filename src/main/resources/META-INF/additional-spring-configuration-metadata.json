@@ -1,0 +1,18 @@
+{
+  "properties": [
+    {
+      "name": "ims.config.max-balance-increase",
+      "type": "java.lang.String",
+      "description": "Description for ims.config.max-balance-increase."
+    },
+    {
+      "name": "ims.config.memory-flush-interval",
+      "type": "java.lang.String",
+      "description": "Description for ims.config.memory-flush-interval."
+    },
+    {
+      "name": "ims.config.max-amount-of-latest-transactions",
+      "type": "java.lang.String",
+      "description": "Description for ims.config.max-amount-of-latest-transactions."
+    }
+  ] }

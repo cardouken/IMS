@@ -1,4 +1,4 @@
-package ee.uustal.ims.api.request;
+package ee.uustal.ims.adapter.api.request;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -9,7 +9,7 @@ public class BalanceChangeRequest {
     private String username;
 
     @NotNull
-    private Integer transactionId;
+    private long transactionId;
 
     @NotNull
     private BigDecimal balanceChange;
@@ -23,11 +23,11 @@ public class BalanceChangeRequest {
         return this;
     }
 
-    public Integer getTransactionId() {
+    public long getTransactionId() {
         return transactionId;
     }
 
-    public BalanceChangeRequest setTransactionId(Integer transactionId) {
+    public BalanceChangeRequest setTransactionId(long transactionId) {
         this.transactionId = transactionId;
         return this;
     }

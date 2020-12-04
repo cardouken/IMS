@@ -1,6 +1,6 @@
 package ee.uustal.ims.usecase.user;
 
-import ee.uustal.ims.entity.Player;
+import ee.uustal.ims.persistence.entity.Player;
 import ee.uustal.ims.service.PlayerService;
 import net.bytebuddy.utility.RandomString;
 
@@ -19,6 +19,6 @@ public class CreatePlayerBuilder {
     }
 
     public Player build() {
-        return playerService.getOrCreatePlayer(username);
+        return playerService.getOrCreate(username);
     }
 }

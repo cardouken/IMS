@@ -1,6 +1,6 @@
-package ee.uustal.ims.controller;
+package ee.uustal.ims.adapter.controller;
 
-import ee.uustal.ims.api.request.BalanceChangeRequest;
+import ee.uustal.ims.adapter.api.request.BalanceChangeRequest;
 import ee.uustal.ims.service.WalletService;
 import ee.uustal.ims.service.WalletServiceImpl;
 import org.springframework.web.bind.annotation.PostMapping;

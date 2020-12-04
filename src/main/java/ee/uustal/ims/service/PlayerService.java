@@ -1,9 +1,15 @@
 package ee.uustal.ims.service;
 
-import ee.uustal.ims.entity.Player;
+import ee.uustal.ims.persistence.entity.Player;
 
 public interface PlayerService {
 
-    Player getOrCreatePlayer(String username);
+    Player getOrCreate(String username);
+
+    void updateAll();
+
+    void blacklist(String username);
+
+    void unblacklist(String username);
 
 }

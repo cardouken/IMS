@@ -1,17 +1,17 @@
 package ee.uustal.ims.service;
 
-import ee.uustal.ims.entity.Player;
-import ee.uustal.ims.entity.Transactions;
+import ee.uustal.ims.persistence.entity.Player;
+import ee.uustal.ims.persistence.entity.Transaction;
 
-import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public interface TransactionService {
 
-    List<Transactions> findAllUntilId(Player player, Integer id);
+    void add(Transaction transaction);
 
-    Transactions add(Player player, Integer txId, BigDecimal balanceChange);
+    Optional<Transaction> findById(Player player, long version, long id);
 
-    List<Transactions> findAllByPlayer(Integer playerId);
+    List<Transaction> findAllByPlayer(String username, long version);
 
 }

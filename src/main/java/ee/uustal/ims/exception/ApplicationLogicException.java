@@ -8,12 +8,12 @@ public class ApplicationLogicException extends RuntimeException {
         BALANCE_CHANGE_EXCEEDS_MAX_LIMIT,
         PLAYER_BLACKLISTED;
 
-        public String toLocalizationKey() {
+        public String formatErrorCode() {
             return "error." + name().toLowerCase().replace("_", "-");
         }
     }
 
     public ApplicationLogicException(ErrorCode error) {
-        super(error.toLocalizationKey(), null, true, false);
+        super(error.formatErrorCode(), null, true, false);
     }
 }

@@ -1,6 +1,6 @@
-package ee.uustal.ims.repository;
+package ee.uustal.ims.persistence.repository;
 
-import ee.uustal.ims.entity.Player;
+import ee.uustal.ims.persistence.entity.Player;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
