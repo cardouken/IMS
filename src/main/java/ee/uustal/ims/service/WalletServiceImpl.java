@@ -52,9 +52,9 @@ public class WalletServiceImpl implements WalletService {
 
         lockService.lock(player.getUsername());
         try {
-            final Optional<Transaction> existingTransactions = transactionService.findById(player, transactionId);
-            if (existingTransactions.isPresent()) {
-                final Transaction transaction = existingTransactions.stream()
+            final Optional<Transaction> existingTransaction = transactionService.findById(player, transactionId);
+            if (existingTransaction.isPresent()) {
+                final Transaction transaction = existingTransaction.stream()
                         .filter(t -> Objects.equals(transactionId, t.getId()))
                         .findFirst()
                         .orElseThrow(EntityNotFoundException::new);
