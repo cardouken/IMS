@@ -22,7 +22,7 @@ public class BalanceUpdateTest extends BaseTest {
         Assertions.assertEquals(BigDecimal.ZERO, player.getBalance());
 
         // when
-        final int txId = 69420;
+        final long txId = 69420;
         final WalletService.BalanceChangeResult result = updateBalance(player).withTransactionId(txId).updateBy(2000).build();
 
         // then
@@ -62,7 +62,7 @@ public class BalanceUpdateTest extends BaseTest {
     public void duplicate_transaction() {
         // given
         final Player player = createPlayer().build();
-        final int txId = 42069;
+        final long txId = 42069;
         updateBalance(player).withTransactionId(txId).updateBy(69).build();
 
         // when
@@ -99,7 +99,7 @@ public class BalanceUpdateTest extends BaseTest {
         }
 
         // when
-        int txId = 404;
+        final long txId = 404;
         final WalletService.BalanceChangeResult result = updateBalance(player).withTransactionId(txId).updateBy(100).build();
 
         // then

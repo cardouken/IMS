@@ -41,7 +41,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public BalanceChangeResult updateBalance(String username, long transactionId, BigDecimal balanceChange) {
-        if (balanceChange.longValue() >= maxBalanceIncrease) {
+        if (balanceChange.longValue() > maxBalanceIncrease) {
             throw new ApplicationLogicException(ApplicationLogicException.ErrorCode.BALANCE_CHANGE_EXCEEDS_MAX_LIMIT);
         }
 
