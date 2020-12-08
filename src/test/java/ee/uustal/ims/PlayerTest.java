@@ -55,9 +55,9 @@ public class PlayerTest extends BaseTest {
     public void remove_player_from_blacklist() {
         // given
         final Player player = createPlayer().build();
+        blacklist(player).build();
 
         // when
-        blacklist(player).build();
         unBlacklist(player).build();
 
         // then
