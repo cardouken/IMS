@@ -7,11 +7,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -36,14 +34,6 @@ public class TransactionServiceImpl implements TransactionService {
                 .filter(t -> Objects.equals(t.getPlayerUsername(), player.getUsername()))
                 .filter(t -> t.getId() == transactionId)
                 .findFirst();
-    }
-
-    @Override
-    public List<Transaction> findAllByPlayer(String username, long version) {
-        return storage.values().stream()
-                .filter(t -> Objects.equals(t.getPlayerUsername(), username))
-                .filter(t -> t.getBalanceVersion() > version)
-                .collect(Collectors.toList());
     }
 
     @Override

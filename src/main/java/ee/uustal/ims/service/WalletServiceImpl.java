@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -66,9 +65,7 @@ public class WalletServiceImpl implements WalletService {
                         .setBalance(transaction.getBalance().add(transaction.getBalanceChange()));
             }
 
-            final List<Transaction> transactions = transactionService.findAllByPlayer(player.getUsername(), player.getBalanceVersion());
-            final Wallet wallet = new Wallet(player, transactions);
-
+            final Wallet wallet = new Wallet(player);
             final Transaction transaction = new Transaction()
                     .setId(transactionId)
                     .setPlayerUsername(player.getUsername())

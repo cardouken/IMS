@@ -5,7 +5,6 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 public class Wallet {
 
@@ -13,16 +12,9 @@ public class Wallet {
     private BigDecimal balance;
     private long version;
 
-    public Wallet(Player player, List<Transaction> transactions) {
+    public Wallet(Player player) {
         this.balance = player.getBalance();
         this.version = player.getBalanceVersion();
-        apply(transactions);
-    }
-
-    private synchronized void apply(List<Transaction> transactions) {
-        for (Transaction transaction : transactions) {
-            apply(transaction);
-        }
     }
 
     public synchronized void apply(Transaction transaction) {
