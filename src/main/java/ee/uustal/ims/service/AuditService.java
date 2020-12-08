@@ -30,8 +30,8 @@ public class AuditService {
                         "OUT by player {0}: transactionId={1}, balanceVersion={2}, balanceChange={3}, resultingBalance={4}",
                         player.getUsername(),
                         String.valueOf(transaction.getId()),
-                        String.valueOf(transaction.getBalanceVersion()),
                         String.valueOf(transaction.getBalanceChange()),
+                        String.valueOf(transaction.getBalanceVersion()),
                         String.valueOf(player.getBalance())
                 )
         );
